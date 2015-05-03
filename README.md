@@ -5,7 +5,10 @@
 ## USAGE
 
 `pod 'RegexKitLite'`
+
 RegexKitLiteを使っています。（すいません）
+
+インポートしてhtml文字列をanalyse関数に投げてください。
 
 ## AUTHOR
 
