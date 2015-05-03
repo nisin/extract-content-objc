@@ -2,6 +2,11 @@
 
 本文抽出 Objective-C ライブラリ
 
+## USAGE
+
+`pod 'RegexKitLite'`
+RegexKitLiteを使っています。（すいません）
+
 ## AUTHOR
 
 noppefoxwolf
