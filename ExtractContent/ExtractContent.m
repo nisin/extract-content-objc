@@ -7,7 +7,7 @@
 //
 
 #import "ExtractContent.h"
-#import <RegexKitLite.h>
+#import "RegexKitLite.h"
 
 @interface ExtractContent (){
     /* Default option parameters. */
@@ -108,7 +108,7 @@
     NSArray *sortarray = [NSArray arrayWithObject:sortDescriptor];
     NSArray *resultarray = [bodylist sortedArrayUsingDescriptors:sortarray];
     
-    return [resultarray firstObject][@"body"];
+    return [self strip_tags:[resultarray firstObject][@"body"]];
 }
 
 
@@ -155,7 +155,7 @@
         NSMutableArray* m_list = [NSMutableArray arrayWithArray:list];
         [m_list removeObjectAtIndex:0];
         int rate = [self evaluate_list:m_list.copy];
-        return (outside.length <= st.length / (45 / rate));
+        return (outside.length <= st.length / (45.0 / rate));
     }
     return false;
 }
