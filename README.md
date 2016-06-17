@@ -2,24 +2,36 @@
 
 本文抽出 Objective-C ライブラリ
 
+## DESCRIPTION
+
+本文抽出 Objective-C ライブラリ
+オリジナルでは抽出後のテキストにタグが含まれるなどの問題があったためRuby版と同じくタグ除去した状態のテキストが取得できるように修正しました。
+
 ## USAGE
 
-`pod 'RegexKitLite'`
+RegexKitLiteは内蔵しました。
 
-RegexKitLiteを使っています。（すいません）
-
-インポートしてhtml文字列をanalyse関数に投げてください。
+ビルドしてExtractContent.frameworkをプロジェクトに取り込んでください。
+ExtractContent.hをインポートしてhtml文字列をanalyse関数に投げてください。
 
 ## AUTHOR
 
-noppefoxwolf
+nisin
+
+オリジナルはnoppefoxwolf
 
 ## Copryright
 
-Copyright (C) 2015 noppefoxwolf. All rights reserved.
+Copyright (C) 2016 noppefoxwolf. All rights reserved.
 
 ## Copyright of the original implementation
 
+objective-C版
+Copyright (C) 2016 noppefoxwolf. All rights reserved.
+
+- https://github.com/noppefoxwolf/extract-content-objc
+
+Ruby版
 Copyright (c) 2007/2008 Nakatani Shuyo / Cybozu Labs Inc. All rights reserved.
 
 - http://labs.cybozu.co.jp/blog/nakatani/2007/09/web_1.html
