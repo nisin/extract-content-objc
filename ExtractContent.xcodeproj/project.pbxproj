@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		2BC020A41D14ECBF00BC5693 /* ExtractContentUniversal */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 2BC020A51D14ECBF00BC5693 /* Build configuration list for PBXAggregateTarget "ExtractContentUniversal" */;
+			buildPhases = (
+				2BC020A81D14ED0B00BC5693 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = ExtractContentUniversal;
+			productName = ExtractContentUniversal;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		2B19F25B1D13CFC300886A5A /* ExtractContent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B19F2501D13CFC300886A5A /* ExtractContent.framework */; };
 		2B19F2601D13CFC300886A5A /* ExtractContentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B19F25F1D13CFC300886A5A /* ExtractContentTests.m */; };
@@ -169,6 +183,9 @@
 					2B19F2591D13CFC300886A5A = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
+					2BC020A41D14ECBF00BC5693 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
 				};
 			};
 			buildConfigurationList = 2B19F24A1D13CFC300886A5A /* Build configuration list for PBXProject "ExtractContent" */;
@@ -185,6 +202,7 @@
 			targets = (
 				2B19F24F1D13CFC300886A5A /* ExtractContent */,
 				2B19F2591D13CFC300886A5A /* ExtractContentTests */,
+				2BC020A41D14ECBF00BC5693 /* ExtractContentUniversal */,
 			);
 		};
 /* End PBXProject section */
@@ -205,6 +223,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2BC020A81D14ED0B00BC5693 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\n\nUNIVERSAL_OUTPUTFOLDER=${BUILD_DIR}/${CONFIGURATION}-universal\n\n# make sure the output directory exists\nmkdir -p \"${UNIVERSAL_OUTPUTFOLDER}\"\n\n# Step 1. Build Device and Simulator versions\nxcodebuild -target \"${PROJECT_NAME}\" ONLY_ACTIVE_ARCH=NO -configuration ${CONFIGURATION} -sdk iphoneos  BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build\nxcodebuild -target \"${PROJECT_NAME}\" -configuration ${CONFIGURATION} -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build\n\n# Step 2. Copy the framework structure (from iphoneos build) to the universal folder\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework\" \"${UNIVERSAL_OUTPUTFOLDER}/\"\n\n# Step 3. Copy Swift modules from iphonesimulator build (if it exists) to the copied framework directory\nSIMULATOR_SWIFT_MODULES_DIR=\"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule/.\"\nif [ -d \"${SIMULATOR_SWIFT_MODULES_DIR}\" ]; then\ncp -R \"${SIMULATOR_SWIFT_MODULES_DIR}\" \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule\"\nfi\n\n# Step 4. Create universal binary file using lipo and place the combined executable in the copied framework directory\nlipo -create -output \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework/${PROJECT_NAME}\"\n\n# Step 5. Convenience step to copy the framework to the project's directory\ncp -R \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework\" \"${PROJECT_DIR}\"\n\n# Step 6. Convenience step to open the project's directory in Finder\nopen \"${PROJECT_DIR}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2B19F24B1D13CFC300886A5A /* Sources */ = {
@@ -330,6 +364,10 @@
 		2B19F2651D13CFC300886A5A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					arm7s,
+				);
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -337,15 +375,21 @@
 				INFOPLIST_FILE = ExtractContent/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.kougyoku.ExtractContent;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				VALID_ARCHS = "arm64 armv7 armv7s i386 x86_64";
 			};
 			name = Debug;
 		};
 		2B19F2661D13CFC300886A5A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					arm7s,
+				);
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -356,6 +400,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = jp.kougyoku.ExtractContent;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				VALID_ARCHS = "arm64 armv7 armv7s i386 x86_64";
 			};
 			name = Release;
 		};
@@ -379,6 +424,20 @@
 			};
 			name = Release;
 		};
+		2BC020A61D14ECBF00BC5693 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2BC020A71D14ECBF00BC5693 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -398,12 +457,22 @@
 				2B19F2661D13CFC300886A5A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2B19F2671D13CFC300886A5A /* Build configuration list for PBXNativeTarget "ExtractContentTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2B19F2681D13CFC300886A5A /* Debug */,
 				2B19F2691D13CFC300886A5A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2BC020A51D14ECBF00BC5693 /* Build configuration list for PBXAggregateTarget "ExtractContentUniversal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BC020A61D14ECBF00BC5693 /* Debug */,
+				2BC020A71D14ECBF00BC5693 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
